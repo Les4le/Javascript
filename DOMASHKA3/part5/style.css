@@ -1,0 +1,38 @@
+body {
+  font-family: Arial, sans-serif;
+  max-width: 600px;
+  margin: 40px auto;
+  background-color: #fafafa;
+}
+h2 {
+  color: #333;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 10px;
+}
+.book-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.book-item {
+  padding: 15px;
+  margin-bottom: 8px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    transform 0.1s;
+  user-select: none;
+}
+.book-item:hover {
+  background-color: #f9f9f9;
+}
+/* Оранжевый фон для активной книги */
+.book-item.selected {
+  background-color: #ffa500 !important;
+  color: #000;
+  font-weight: bold;
+  border-color: #e09200;
+}
