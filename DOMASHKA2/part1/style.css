@@ -1,0 +1,36 @@
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f4f4f9;
+  margin: 0;
+}
+.trackbar-container {
+  text-align: center;
+}
+.track {
+  width: 400px;
+  height: 10px;
+  background-color: #ccc;
+  border-radius: 5px;
+  position: relative;
+  cursor: pointer;
+  margin-bottom: 15px;
+}
+.thumb {
+  width: 20px;
+  height: 20px;
+  background-color: #007bff;
+  border-radius: 50%;
+  position: absolute;
+  top: -5px;
+  left: 0;
+  cursor: grab;
+  transition: transform 0.1s;
+}
+.thumb:active {
+  cursor: grabbing;
+  transform: scale(1.2);
+}
