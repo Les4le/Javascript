@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    .setup-panel {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .setup-panel select {
+      padding: 4px;
+    }
+
+    .journal-table {
+      width: 100%;
+      max-width: 500px;
+      border-collapse: collapse;
+      margin-top: 15px;
+      display: none;
+    }
+
+    .journal-table th,
+    .journal-table td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+    }
+
+    .journal-table th {
+      background-color: #f2f2f2;
+    }
+
+    .topic-container {
+      margin-top: 15px;
+      display: none;
+      max-width: 500px;
+    }
+
+    .topic-container input {
+      width: 100%;
+      padding: 5px;
+      box-sizing: border-box;
+      margin-top: 5px;
+    }
+
+    button {
+      padding: 5px 15px;
+      border: 1px solid #999;
+      background: #e1e1e1;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #d4d4d4;
+    }
+
+    .btn-save {
+      margin-top: 15px;
+      display: none;
+    }
+  </style>
+  <title>Document</title>
+</head>
+
+<body>
+  <div class="setup-panel">
+    <label>Group:
+      <select id="groupSelect">
+        <option value="Group 1">Group 1</option>
+        <option value="Group 2">Group 2</option>
+      </select>
+    </label>
+    <label>Lesson:
+      <select id="lessonSelect">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+      </select>
+    </label>
+    <button onclick="loadLessonData()">Select</button>
+  </div>
+
+  <div class="topic-container" id="topicDiv">
+    <label>Topic: <input type="text" id="lessonTopic"></label>
+  </div>
+
+  <table class="journal-table" id="journalTable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Is present</th>
+      </tr>
+    </thead>
+    <tbody id="journalBody">
+    </tbody>
+  </table>
+
+  <button class="btn-save" id="saveBtn" onclick="saveAttendance()">Save</button>
+
+  <script>
+
+    const studentsList = ["Student 1", "Student 2", "Student 3"];
+
+    const attendanceDatabase = {};
+
+    function loadLessonData() {
+      const group = document.getElementById('groupSelect').value;
+      const lesson = document.getElementById('lessonSelect').value;
+      const key = `${group}_${lesson}`; // Унікальний ключ для пари
+
+      const topicDiv = document.getElementById('topicDiv');
+      const journalTable = document.getElementById('journalTable');
+      const saveBtn = document.getElementById('saveBtn');
+      const topicInput = document.getElementById('lessonTopic');
+      const tbody = document.getElementById('journalBody');
+
+      topicDiv.style.display = 'block';
+      journalTable.style.display = 'table';
+
+      if (attendanceDatabase[key]) {
+        const savedData = attendanceDatabase[key];
+        topicInput.value = savedData.topic;
+        topicInput.disabled = true;
+        saveBtn.style.display = 'none';
+
+        tbody.innerHTML = savedData.students.map(st => `
+              <tr>
+                  <td>${st.name}</td>
+                  <td style="color: green; font-weight: bold;">${st.present ? 'present' : 'absent'}</td>
+              </tr>
+          `).join('');
+      } else {
+
+        topicInput.value = '';
+        topicInput.disabled = false;
+        saveBtn.style.display = 'block';
+
+        tbody.innerHTML = studentsList.map((student, index) => `
+              <tr>
+                  <td>${student}</td>
+                  <td><input type="checkbox" class="attendance-check" data-name="${student}" checked></td>
+              </tr>
+          `).join('');
+      }
+    }
+
+    function saveAttendance() {
+      const group = document.getElementById('groupSelect').value;
+      const lesson = document.getElementById('lessonSelect').value;
+      const topic = document.getElementById('lessonTopic').value;
+      const key = `${group}_${lesson}`;
+
+      if (!topic.trim()) {
+        alert("Будь ласка, введіть тему заняття!");
+        return;
+      }
+
+      const checkboxes = document.querySelectorAll('.attendance-check');
+      const studentsData = [];
+
+      checkboxes.forEach(cb => {
+        studentsData.push({
+          name: cb.getAttribute('data-name'),
+          present: cb.checked
+        });
+      });
+
+      attendanceDatabase[key] = {
+        topic: topic,
+        students: studentsData
+      };
+
+      alert("Дані успішно збережено!");
+      loadLessonData();
+    }
+  </script>
+</body>
+
+</html>

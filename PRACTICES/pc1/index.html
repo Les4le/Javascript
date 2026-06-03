@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./style.css">
+  <title>Document</title>
+</head>
+
+<body>
+  <header>
+    <div class="leftBox">
+      <h1>Enter JSON Data</h1>
+      <input type="text" id="unfrmtd">
+    </div>
+
+    <div class="centerButton">
+      <button id="baton">✅</button>
+    </div>
+
+    <div class="rightBox">
+      <h1>Formatted JSON data</h1>
+      <input type="text" readonly id="frmtd">
+    </div>
+  </header>
+
+  <script>
+
+
+    let theBaton = document.getElementById("baton");
+
+    function formatData() {
+      let formattedJsonData = document.getElementById("unfrmtd");
+      let entJsonData = document.getElementById("frmtd");
+      theBaton.addEventListener('click', () => { entJsonData.value = JSON.stringify(formattedJsonData, null, 2); })
+
+    }
+
+  </script>
+</body>
+
+</html>

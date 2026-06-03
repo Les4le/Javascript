@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+
+    // 1
+
+    // function processArray(array, callback) {
+    //   const result = [];
+    //   for (let i = 0; i < array.length; i++) {
+    //     result.push(callback(array[i]));
+    //   }
+    //   return result;
+    // }
+
+    // function doubleElement(element) {
+    //   return element * 2;
+    // }
+
+    // function reverseElement(element) {
+    //   return element.split('').reverse().join('');
+    // }
+
+    // console.log("--- Задание 1 ---");
+    // console.log(processArray([1, 2, 3, 4, 5], doubleElement));
+
+    // console.log(processArray(["hello", "world"], reverseElement));
+
+    // 2
+
+    // function filterArray(array, callback) {
+    //   const result = [];
+    //   for (let i = 0; i < array.length; i++) {
+    //     if (callback(array[i])) {
+    //       result.push(array[i]);
+    //     }
+    //   }
+    //   return result;
+    // }
+
+    // function isEven(number) {
+    //   return number % 2 === 0;
+    // }
+
+    // function isShortWord(word) {
+    //   return word.length <= 4;
+    // }
+
+    // console.log("\n--- Задание 2 ---");
+    // console.log(filterArray([1, 2, 3, 4, 5], isEven));
+
+    // console.log(filterArray(["cat", "elephant", "dog", "bird"], isShortWord));
+
+
+    // 3
+
+    // function washDishes() {
+    //   return new Promise((resolve) => {
+    //     setTimeout(() => {
+    //       resolve("Посуд вимито");
+    //     }, 2000);
+    //   });
+    // }
+
+    // function cleanRoom() {
+    //   return new Promise((resolve) => {
+    //     setTimeout(() => {
+    //       resolve("Кімнату прибрано");
+    //     }, 4000); 
+    //   });
+    // }
+
+    // function makeDinner() {
+    //   return new Promise((resolve) => {
+    //     setTimeout(() => {
+    //       resolve("Вечеря приготована");
+    //     }, 7000); 
+    //   });
+    // }
+
+    // console.log("\n--- Задание 3 (Запуск цепочки домашней работы) ---");
+
+    // washDishes()
+    //   .then((message1) => {
+    //     console.log(message1);
+    //     return cleanRoom();
+    //   })
+    //   .then((message2) => {
+    //     console.log(message2);
+    //     return makeDinner(); 
+    //   })
+    //   .then((message3) => {
+    //     console.log(message3);
+    //     console.log("Усі домашні справи виконано успішно!");
+    //   });
+
+    // 4
+
+    async function runHouseholdTasks() {
+      console.log("\n--- Задание 4 (Запуск через async/await) ---");
+      try {
+
+        const msg1 = await washDishes();
+        console.log(`[async/await] ${msg1}`);
+
+        const msg2 = await cleanRoom();
+        console.log(`[async/await] ${msg2}`);
+
+        const msg3 = await makeDinner();
+        console.log(`[async/await] ${msg3}`);
+
+        console.log("[async/await] Усі завдання завершено!");
+      } catch (error) {
+        console.error("Произошла ошибка при выполнении задач:", error);
+      }
+    }
+
+    runHouseholdTasks();
+  </script>
+</body>
+
+</html>

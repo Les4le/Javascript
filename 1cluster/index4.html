@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: #f5f5f5;
+    }
+
+    .main-container {
+      display: flex;
+      gap: 20px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .catalog {
+      display: flex;
+      gap: 15px;
+      flex: 3;
+    }
+
+    .book-card {
+      border: 1px solid #ccc;
+      background: #fff;
+      padding: 10px;
+      width: 31%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-align: center;
+    }
+
+    .book-card img {
+      max-width: 100%;
+      height: 180px;
+      object-fit: contain;
+      background: #eee;
+      margin-bottom: 10px;
+    }
+
+    .book-title {
+      font-size: 13px;
+      font-weight: bold;
+      min-height: 50px;
+      text-align: left;
+    }
+
+    .book-author {
+      font-size: 11px;
+      color: #666;
+      text-align: left;
+      margin-bottom: 10px;
+    }
+
+    .book-price {
+      font-weight: bold;
+      font-size: 16px;
+      text-align: right;
+      margin-bottom: 10px;
+    }
+
+    .order-panel {
+      flex: 2;
+      border: 1px solid #ccc;
+      background: #fff;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 6px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      font-family: inherit;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      height: 60px;
+    }
+
+    button {
+      padding: 6px 15px;
+      border: 1px solid #999;
+      background: #e1e1e1;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background: #d4d4d4;
+    }
+
+    .btn-select {
+      width: 100%;
+    }
+
+    .btn-buy {
+      width: 100%;
+      margin-top: auto;
+    }
+
+    .selected {
+      border: 2px solid #0056b3;
+      box-shadow: 0 0 5px rgba(0, 86, 179, 0.3);
+    }
+
+    .result-message {
+      max-width: 1000px;
+      margin: 20px auto 0;
+      padding: 15px;
+      background: #e6f4ea;
+      border: 1px solid #34a853;
+      font-weight: bold;
+      display: none;
+    }
+  </style>
+  <title>Document</title>
+</head>
+
+<body>
+  <div class="main-container">
+    <div class="catalog">
+      <div class="book-card" id="book0">
+        <div
+          style="height:180px; background:#e0f7fa; display:flex; align-items:center; justify-content:center; font-weight:bold; color:#006064;">
+          JS Rhino</div>
+        <div class="book-title">Learning JavaScript. JavaScript Essentials for Modern Application Development</div>
+        <div class="book-author">Ethan Brown</div>
+        <div class="book-price">16$</div>
+        <button class="btn-select" onclick="selectBook(0, 'Learning JavaScript')">Select</button>
+      </div>
+
+      <div class="book-card" id="book1">
+        <div
+          style="height:180px; background:#fffde7; display:flex; align-items:center; justify-content:center; font-weight:bold; color:#fbc02d;">
+          YDKJS</div>
+        <div class="book-title">You Don't Know JS: Scope & Closures</div>
+        <div class="book-author">Kyle Simpson</div>
+        <div class="book-price">20$</div>
+        <button class="btn-select" onclick="selectBook(1, 'You Don\'t Know JS: Scope & Closures')">Select</button>
+      </div>
+
+      <div class="book-card" id="book2">
+        <div
+          style="height:180px; background:#fce4ec; display:flex; align-items:center; justify-content:center; font-weight:bold; color:#c2185b;">
+          JS & jQuery</div>
+        <div class="book-title">JavaScript and JQuery: Interactive Front-End Web Development</div>
+        <div class="book-author">Jon Duckett</div>
+        <div class="book-price">22$</div>
+        <button class="btn-select" onclick="selectBook(2, 'JavaScript and JQuery')">Select</button>
+      </div>
+    </div>
+
+    <div class="order-panel">
+      <form id="orderForm" onsubmit="processOrder(event)">
+        <div class="form-group">
+          <label>Book:</label>
+          <input type="text" id="orderBook" readonly placeholder="Select a book first..." required>
+        </div>
+        <div class="form-group">
+          <label>Quantity:</label>
+          <input type="number" id="orderQty" min="1" value="1" required>
+        </div>
+        <div class="form-group">
+          <label>Name:</label>
+          <input type="text" id="orderName" required>
+        </div>
+        <div class="form-group">
+          <label>Delivery address:</label>
+          <textarea id="orderAddress" required></textarea>
+        </div>
+        <div class="form-group">
+          <label>Delivery date:</label>
+          <input type="date" id="orderDate" required>
+        </div>
+        <div class="form-group">
+          <label>Comment:</label>
+          <textarea id="orderComment"></textarea>
+        </div>
+        <button type="submit" class="btn-buy">Buy</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="result-message" id="resultMsg"></div>
+
+  <script>
+    let selectedBookTitle = "";
+
+    function selectBook(index, title) {
+      document.querySelectorAll('.book-card').forEach(card => card.classList.remove('selected'));
+      document.getElementById('book' + index).classList.add('selected');
+
+      selectedBookTitle = title;
+      document.getElementById('orderBook').value = title;
+    }
+
+    function processOrder(event) {
+      event.preventDefault();
+
+      const name = document.getElementById('orderName').value;
+      const date = document.getElementById('orderDate').value;
+      const address = document.getElementById('orderAddress').value;
+
+      const formattedDate = date.split('-').reverse().join('.');
+
+      const resultMsg = document.getElementById('resultMsg');
+      resultMsg.innerHTML = `${name}, дякуємо за замовлення. Товар "${selectedBookTitle}" буде доставлений ${formattedDate} за адресою: ${address}.`;
+      resultMsg.style.display = 'block';
+    }
+  </script>
+</body>
+
+</html>

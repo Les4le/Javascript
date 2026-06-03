@@ -1,0 +1,177 @@
+<!-- 
+ВНИМАНИЕ!!!!!!!!!!!!!!!!!!
+стиль и скрипт будет в одном файле, потому что так намного быстрее -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: #f9f9f9;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .message-box {
+      border: 1px solid #ccc;
+      background: #fff;
+      padding: 10px;
+      margin-bottom: 15px;
+    }
+
+    .message-header {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px dashed #ccc;
+      padding-bottom: 5px;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    .message-text {
+      font-size: 14px;
+      line-height: 1.4;
+      color: #333;
+    }
+
+    /* СТИЛІ ФОРМИ */
+    fieldset {
+      border: 1px solid #ccc;
+      background: #fff;
+      padding: 15px;
+    }
+
+    legend {
+      text-align: center;
+      font-weight: bold;
+      padding: 0 10px;
+    }
+
+    .form-group {
+      display: flex;
+      margin-bottom: 10px;
+      align-items: center;
+    }
+
+    .form-group label {
+      width: 100px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      flex: 1;
+      padding: 5px;
+      border: 1px solid #ccc;
+      font-family: inherit;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      height: 60px;
+    }
+
+    .btn-container {
+      text-align: center;
+    }
+
+    button {
+      padding: 5px 25px;
+      border: 1px solid #999;
+      background: #e1e1e1;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #d4d4d4;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div id="forumMessages">
+      <div class="message-box">
+        <div class="message-header">
+          <span>Name</span>
+          <span>10:05:00 22.03.2018</span>
+        </div>
+        <div class="message-text">
+          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
+          standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to
+          make
+          a type specimen book.
+        </div>
+      </div>
+    </div>
+
+    <form id="messageForm" onsubmit="addMessage(event)">
+      <fieldset>
+        <legend>Add new message:</legend>
+        <div class="form-group">
+          <label for="username">Your name:</label>
+          <input type="text" id="username" required>
+        </div>
+        <div class="form-group">
+          <label for="usertext">Your message:</label>
+          <textarea id="usertext" required></textarea>
+        </div>
+        <div class="btn-container">
+          <button type="submit">Send</button>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+
+  <script>
+    function addMessage(event) {
+      event.preventDefault();
+
+      const nameInput = document.getElementById('username');
+      const textInput = document.getElementById('usertext');
+      const messagesContainer = document.getElementById('forumMessages');
+
+      const now = new Date();
+      const pad = (num) => String(num).padStart(2, '0');
+
+      const timeStr = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+      const dateStr = `${pad(now.getDate())}.${pad(now.getMonth() + 1)}.${now.getFullYear()}`;
+      const fullDate = `${timeStr} ${dateStr}`;
+
+      const messageBox = document.createElement('div');
+      messageBox.className = 'message-box';
+
+      messageBox.innerHTML = `
+          <div class="message-header">
+              <span>${escapeHTML(nameInput.value)}</span>
+              <span>${fullDate}</span>
+          </div>
+          <div class="message-text">
+              ${escapeHTML(textInput.value)}
+          </div>
+      `;
+
+      messagesContainer.appendChild(messageBox);
+
+      nameInput.value = '';
+      textInput.value = '';
+    }
+
+    function escapeHTML(str) {
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+  </script>
+</body>
+
+</html>

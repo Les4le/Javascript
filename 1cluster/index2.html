@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+    }
+
+    .quiz-container {
+      max-width: 400px;
+    }
+
+    .question-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .options {
+      margin-bottom: 20px;
+    }
+
+    .options label {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+      cursor: pointer;
+    }
+
+    .options input {
+      margin-right: 10px;
+    }
+
+    button {
+      padding: 5px 25px;
+      border: 1px solid #999;
+      background: #e1e1e1;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #d4d4d4;
+    }
+
+    .result {
+      font-size: 18px;
+      font-weight: bold;
+    }
+  </style>
+  <title>Document</title>
+</head>
+
+<body>
+  <div class="quiz-container">
+    <div id="quiz-box">
+    </div>
+  </div>
+
+  <script>
+    const quizData = [
+      {
+        question: "How many letters are there in the word \"Hello\"?",
+        options: ["5", "2"],
+        correct: 0
+      },
+      {
+        question: "How many letters are there in the word \"World\"?",
+        options: ["4", "5"],
+        correct: 1
+      }
+    ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+
+    function loadQuestion() {
+      const quizBox = document.getElementById('quiz-box');
+      const currentData = quizData[currentQuestionIndex];
+
+      const isLast = currentQuestionIndex === quizData.length - 1;
+      const btnText = isLast ? 'Finish' : 'Next';
+
+      quizBox.innerHTML = `
+          <div class="question-title">${currentQuestionIndex + 1}) ${currentData.question}</div>
+          <div class="options">
+              ${currentData.options.map((option, index) => `
+                  <label>
+                      <input type="radio" name="answer" value="${index}">
+                      ${option}
+                  </label>
+              `).join('')}
+          </div>
+          <button onclick="handleNext()">${btnText}</button>
+      `;
+    }
+
+    function handleNext() {
+      const selectedOption = document.querySelector('input[name="answer"]:checked');
+
+      if (!selectedOption) {
+        alert("Будь ласка, оберіть варіант відповіді!");
+        return;
+      }
+
+      const answerIndex = parseInt(selectedOption.value);
+      if (answerIndex === quizData[currentQuestionIndex].correct) {
+        score++;
+      }
+
+      currentQuestionIndex++;
+      if (currentQuestionIndex < quizData.length) {
+        loadQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      const quizBox = document.getElementById('quiz-box');
+      quizBox.innerHTML = `
+          <div class="result">Result: ${score} correct answers to ${quizData.length} questions.</div>
+      `;
+    }
+    loadQuestion();
+  </script>
+</body>
+
+</html>

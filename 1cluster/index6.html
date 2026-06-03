@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    .search-panel {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .search-panel input,
+    .search-panel select {
+      padding: 4px;
+      font-family: inherit;
+    }
+
+    /* СХЕМА ВАГОНУ */
+    .train-wagon-container {
+      display: none;
+      margin-top: 20px;
+    }
+
+    .wagon {
+      border: 2px solid #aaa;
+      border-radius: 8px;
+      padding: 15px;
+      display: inline-block;
+      background: #fff;
+    }
+
+    .seats-grid {
+      display: grid;
+      grid-template-columns: repeat(14, auto);
+      gap: 8px;
+    }
+
+    .seat {
+      border: 1px solid #ccc;
+      padding: 6px 8px;
+      text-align: center;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: #f9f9f9;
+    }
+
+    .seat.booked {
+      background: #ffcdd2;
+      color: #c62828;
+      font-weight: bold;
+    }
+
+    .booking-actions {
+      margin-top: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 600px;
+    }
+
+    .total-price {
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    /* ТАБЛИЦЯ КВИТКІВ */
+    .tickets-section {
+      margin-top: 30px;
+    }
+
+    .tickets-table {
+      width: 100%;
+      max-width: 500px;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    .tickets-table th,
+    .tickets-table td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+    }
+
+    .tickets-table th {
+      background-color: #f2f2f2;
+    }
+
+    button {
+      padding: 5px 15px;
+      border: 1px solid #999;
+      background: #e1e1e1;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #d4d4d4;
+    }
+  </style>
+  <title>Document</title>
+</head>
+
+<body>
+  <div class="search-panel">
+    <label>Direction:
+      <select id="directionSelect">
+        <option value="Odessa - Lviv">Odessa - Lviv</option>
+        <option value="Kyiv - Odessa">Kyiv - Odessa</option>
+      </select>
+    </label>
+    <label>Date: <input type="date" id="travelDate" required></label>
+    <button onclick="searchTrain()">Search</button>
+  </div>
+
+  <div class="train-wagon-container" id="wagonContainer">
+    <div class="wagon">
+      <div class="seats-grid" id="seatsGrid">
+      </div>
+    </div>
+    <div class="booking-actions">
+      <div class="total-price">Total price: <span id="totalPriceDisplay">0</span>$</div>
+      <button onclick="bookSelectedSeats()">Book</button>
+    </div>
+  </div>
+
+  <div class="tickets-section">
+    <h3>My tickets:</h3>
+    <table class="tickets-table">
+      <thead>
+        <tr>
+          <th>Direction</th>
+          <th>Date</th>
+          <th>Seat</th>
+        </tr>
+      </thead>
+      <tbody id="myTicketsBody">
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    const PRICE_PER_SEAT = 62;
+    const globalBookedSeats = {
+      "Odessa - Lviv_2018-07-24": [5, 6, 12]
+    };
+
+    const userTickets = [];
+
+    function searchTrain() {
+      const direction = document.getElementById('directionSelect').value;
+      const date = document.getElementById('travelDate').value;
+
+      if (!date) {
+        alert("Будь ласка, оберіть дату!");
+        return;
+      }
+
+      document.getElementById('wagonContainer').style.display = 'block';
+      renderWagon();
+    }
+
+    function renderWagon() {
+      const direction = document.getElementById('directionSelect').value;
+      const date = document.getElementById('travelDate').value;
+      const key = `${direction}_${date}`;
+
+      const bookedSeats = globalBookedSeats[key] || [];
+      const grid = document.getElementById('seatsGrid');
+      grid.innerHTML = '';
+
+      document.getElementById('totalPriceDisplay').textContent = '0';
+
+      let row1 = [];
+      let row2 = [];
+      for (let i = 1; i <= 28; i++) {
+        if (i % 2 !== 0) row1.push(i);
+        else row2.push(i);
+      }
+      const displayOrder = [...row1, ...row2];
+
+      displayOrder.forEach(seatNum => {
+        const isAlreadyBooked = bookedSeats.includes(seatNum);
+        const seatDiv = document.createElement('div');
+        seatDiv.className = `seat ${isAlreadyBooked ? 'booked' : ''}`;
+
+        if (isAlreadyBooked) {
+          seatDiv.innerHTML = `<span>🔒</span> ${seatNum}`;
+        } else {
+          seatDiv.innerHTML = `
+                <input type="checkbox" value="${seatNum}" class="seat-checkbox" onchange="calculatePrice()">
+                ${seatNum}
+            `;
+        }
+        grid.appendChild(seatDiv);
+      });
+    }
+
+    function calculatePrice() {
+      const checkedCount = document.querySelectorAll('.seat-checkbox:checked').length;
+      document.getElementById('totalPriceDisplay').textContent = checkedCount * PRICE_PER_SEAT;
+    }
+
+    function bookSelectedSeats() {
+      const direction = document.getElementById('directionSelect').value;
+      const date = document.getElementById('travelDate').value;
+      const key = `${direction}_${date}`;
+
+      const selectedCheckboxes = document.querySelectorAll('.seat-checkbox:checked');
+
+      if (selectedCheckboxes.length === 0) {
+        alert("Будь ласка, виберіть хоча б одне місце!");
+        return;
+      }
+
+      if (!globalBookedSeats[key]) {
+        globalBookedSeats[key] = [];
+      }
+
+      const formattedDate = date.split('-').reverse().join('.');
+
+      selectedCheckboxes.forEach(cb => {
+        const seatNum = parseInt(cb.value);
+
+        globalBookedSeats[key].push(seatNum);
+
+        userTickets.push({
+          direction: direction,
+          date: formattedDate,
+          seat: seatNum
+        });
+      });
+
+      alert("Місця успішно заброньовано!");
+      updateTicketsTable();
+      renderWagon();
+    }
+
+    function updateTicketsTable() {
+      const tbody = document.getElementById('myTicketsBody');
+      tbody.innerHTML = userTickets.map(t => `
+        <tr>
+            <td>${t.direction}</td>
+            <td>${t.date}</td>
+            <td>${t.seat}</td>
+        </tr>
+    `).join('');
+    }
+  </script>
+
+</body>
+
+</html>
