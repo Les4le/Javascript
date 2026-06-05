@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <form id="tableForm">
+    <label>Рядки: <input type="number" id="rowsInput" min="1" value="3"></label><br>
+    <label>Стовпці: <input type="number" id="colsInput" min="1" value="3"></label><br>
+    <label>Текст: <input type="text" id="cellTextInput" value="Текст"></label><br>
+    <button type="submit">Створити таблицю</button>
+  </form>
+  <div id="tableContainer" style="margin-top: 15px;"></div>
+
+  <script>
+    document.getElementById('tableForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const rows = parseInt(document.getElementById('rowsInput').value);
+      const cols = parseInt(document.getElementById('colsInput').value);
+      const text = document.getElementById('cellTextInput').value;
+
+      let tableHtml = '<table border="1" style="border-collapse: collapse; text-align: center;">';
+      for (let i = 0; i < rows; i++) {
+        tableHtml += '<tr>';
+        for (let j = 0; j < cols; j++) {
+          tableHtml += `<td style="padding: 8px;">${text}</td>`;
+        }
+        tableHtml += '</tr>';
+      }
+      tableHtml += '</table>';
+
+      document.getElementById('tableContainer').innerHTML = tableHtml;
+    });
+  </script>
+</body>
+
+</html>

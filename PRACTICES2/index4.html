@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    class Button {
+      constructor(width, height, text) {
+        this.width = width;
+        this.height = height;
+        this.text = text;
+      }
+
+      showBtn() {
+        document.write(`<button style="width: ${this.width}; height: ${this.height};">${this.text}</button>`);
+      }
+    }
+
+    class BootstrapButton extends Button {
+      constructor(width, height, text, color) {
+        super(width, height, text);
+        this.color = color;
+      }
+
+      showBtn() {
+        document.write(`
+            <button style="
+                width: ${this.width}; 
+                height: ${this.height}; 
+                background-color: ${this.color}; 
+                color: white; 
+                border: none; 
+                border-radius: 4px; 
+                padding: 5px 10px; 
+                cursor: pointer;
+            ">${this.text}</button>
+        `);
+      }
+    }
+
+    const simpleBtn = new Button("100px", "40px", "Проста");
+    simpleBtn.showBtn();
+
+    const bootBtn = new BootstrapButton("150px", "40px", "Bootstrap Кнопка", "crimson");
+    bootBtn.showBtn();
+
+
+    class GeometricFigure {
+      get name() {
+        return "Геометрична фігура";
+      }
+      printInfo() {
+        console.log("Інформація про фігуру відсутня.");
+      }
+      getArea() {
+        return 0;
+      }
+      getPerimeter() {
+        return 0;
+      }
+    }
+
+    class Square extends GeometricFigure {
+      constructor(side) {
+        super();
+        this.side = side;
+      }
+      get name() { return "Квадрат"; }
+      printInfo() { console.log(`Фігура: ${this.name}, Сторона = ${this.side}`); }
+      getArea() { return this.side ** 2; }
+      getPerimeter() { return this.side * 4; }
+    }
+
+    class RectangleFigure extends GeometricFigure {
+      constructor(a, b) {
+        super();
+        this.a = a;
+        this.b = b;
+      }
+      get name() { return "Прямокутник"; }
+      printInfo() { console.log(`Фігура: ${this.name}, Сторони = ${this.a}, ${this.b}`); }
+      getArea() { return this.a * this.b; }
+      getPerimeter() { return 2 * (this.a + this.b); }
+    }
+
+    class Triangle extends GeometricFigure {
+      constructor(a, b, c) {
+        super();
+        this.a = a;
+        this.b = b;
+        this.c = c;
+      }
+      get name() { return "Трикутник"; }
+      printInfo() { console.log(`Фігура: ${this.name}, Сторони = ${this.a}, ${this.b}, ${this.c}`); }
+      getArea() {
+
+        const p = this.getPerimeter() / 2;
+        return Math.sqrt(p * (p - this.a) * (p - this.b) * (p - this.c));
+      }
+      getPerimeter() { return this.a + this.b + this.c; }
+    }
+
+    const figures = [
+      new Square(5),
+      new RectangleFigure(4, 6),
+      new Triangle(3, 4, 5)
+    ];
+
+    figures.forEach(fig => {
+      fig.printInfo();
+      console.log(`Площа: ${fig.getArea().toFixed(2)}, Периметр: ${fig.getPerimeter()}`);
+      console.log("---");
+    });
+
+
+    class ExtendedArray extends Array {
+      getString(separator) {
+        return this.join(separator);
+      }
+
+      getHtml(tagName) {
+        const itemsHtml = this.map(item => `<${tagName}>${item}</${tagName}>`).join('');
+        if (tagName.toLowerCase() === 'li') {
+          return `<ul>${itemsHtml}</ul>`;
+        }
+        return itemsHtml;
+      }
+    }
+
+    const myArr = new ExtendedArray("Яблуко", "Банан", "Апельсин");
+    document.write("<p>" + myArr.getString(" - ") + "</p>");
+    document.write(myArr.getHtml("li"));
+  </script>
+</body>
+
+</html>

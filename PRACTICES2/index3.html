@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    class PrintMachine {
+      constructor(fontSize, fontColor, fontFamily) {
+        this.fontSize = fontSize;
+        this.fontColor = fontColor;
+        this.fontFamily = fontFamily;
+      }
+
+      print(text) {
+        document.write(`<p style="font-size: ${this.fontSize}; color: ${this.fontColor}; font-family: ${this.fontFamily};">${text}</p>`);
+      }
+    }
+
+    const printer = new PrintMachine("20px", "darkblue", "Arial");
+    printer.print("Привіт! Цей текст виведено за допомогою класу PrintMachine.");
+
+
+    class News {
+      constructor(title, text, tags, publishDate) {
+        this.title = title;
+        this.text = text;
+        this.tags = tags; // Масив рядків
+        this.publishDate = new Date(publishDate);
+      }
+
+      getFormattedDate() {
+        const now = new Date();
+        const diffTime = Math.abs(now - this.publishDate);
+        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+        if (diffDays < 1) {
+          return "сьогодні";
+        } else if (diffDays < 7) {
+          return `${diffDays} днів тому`;
+        } else {
+          const day = String(this.publishDate.getDate()).padStart(2, '0');
+          const month = String(this.publishDate.getMonth() + 1).padStart(2, '0');
+          const year = this.publishDate.getFullYear();
+          return `${day}.${month}.${year}`;
+        }
+      }
+
+      print() {
+        const tagsString = this.tags.map(tag => `#${tag}`).join(' ');
+        document.write(`
+            <div style="margin-bottom: 20px; font-family: sans-serif;">
+                <h2>${this.title}</h2>
+                <p style="color: gray; font-size: 0.9rem;">${this.getFormattedDate()}</p>
+                <p>${this.text}</p>
+                <p style="color: blue;">${tagsString}</p>
+            </div>
+            <hr>
+        `);
+      }
+    }
+
+
+    class NewsFeed {
+      constructor() {
+        this.newsList = [];
+      }
+
+      get count() {
+        return this.newsList.length;
+      }
+
+      addNews(newsItem) {
+        this.newsList.push(newsItem);
+      }
+
+      removeNews(title) {
+        this.newsList = this.newsList.filter(item => item.title !== title);
+      }
+
+      printAll() {
+        if (this.newsList.length === 0) {
+          document.write("<p>Стрічка новин порожня.</p>");
+          return;
+        }
+        this.newsList.forEach(item => item.print());
+      }
+
+      sortByDate() {
+        this.newsList.sort((a, b) => b.publishDate - a.publishDate);
+      }
+
+      searchByTag(tag) {
+        return this.newsList.filter(item => item.tags.includes(tag.toLowerCase()));
+      }
+    }
+
+    const feed = new NewsFeed();
+
+    feed.addNews(new News(["What is Lorem Ipsum?"], "Lorem Ipsum is simply dummy text...", ["lorem", "ipsum", "text"], new Date() - 2 * 24 * 60 * 60 * 1000));
+    feed.addNews(new News("Свіжа новина", "Текст свіжої новини", ["news", "today"], new Date()));
+    feed.addNews(new News("Стара новина", "Текст старої новини", ["archive", "text"], "2026-05-01"));
+
+    console.log(`Кількість новин у стрічці: ${feed.count}`);
+    feed.sortByDate();
+    feed.printAll();
+  </script>
+</body>
+
+</html>

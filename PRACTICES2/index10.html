@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <!DOCTYPE html>
+  <html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+  </head>
+
+  <body>
+    <script>
+      function multiplyAsync(a, b) {
+        return new Promise((resolve, reject) => {
+          if (typeof a !== 'number' || typeof b !== 'number' || isNaN(a) || isNaN(b)) {
+            reject(new Error("Некоректні значення"));[cite, 47]
+          } else {
+            setTimeout(() => {
+              resolve(a * b);[cite, 46]
+            }, 2000);[cite, 45]
+          }
+        });
+      }
+
+      async function main() {
+        try {
+          console.log("Рахуємо (зачекайте 2 секунди)...");
+          const result = await multiplyAsync(6, 9);[cite, 48]
+          console.log(`Результат множення 6 * 9 = ${result}`);[cite, 48]
+
+        } catch (error) {
+          console.error(`Помилка у main: ${error.message}`);
+        }
+      }
+
+      main();[cite, 48]
+
+
+      function sortArrayAsync(array) {
+        return new Promise((resolve, reject) => {
+          if (!array || array.length === 0) {
+            reject(new Error("Масив порожній"));[cite, 52]
+          } else {
+            setTimeout(() => {
+              const sorted = [...array].sort((a, b) => a - b);[cite, 53]
+              resolve(sorted);[cite, 53]
+            }, 2000);[cite, 51]
+          }
+        });
+      }
+
+      async function mainSort() {
+        try {
+          const numbers = [34, 7, 23, 32, 5, 62];
+          console.log("Початковий масив:", numbers);
+          console.log("Сортуємо масив (зачекайте 2 секунди)...");
+
+          const sortedNumbers = await sortArrayAsync(numbers);[cite, 53, 54]
+          console.log("Відсортований масив:", sortedNumbers);[cite, 53]
+
+          // Демонстрація помилки з порожнім масивом:
+          // await sortArrayAsync([]);
+        } catch (error) {
+          console.error(`Помилка сортування: ${error.message}`);
+        }
+      }
+
+      mainSort();
+    </script>
+  </body>
+
+  </html>
+</body>
+
+</html>

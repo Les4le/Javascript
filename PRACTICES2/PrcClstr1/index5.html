@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <textarea id="noDigitsText" cols="30" rows="5"
+    placeholder="Вводьте текст сюди (цифри не працюватимуть)..."></textarea>
+
+  <script>
+
+    document.getElementById('noDigitsText').addEventListener('keydown', function (e) {
+      if ((e.key >= '0' && e.key <= '9') && e.key !== ' ') {
+        e.preventDefault();
+      }
+    });
+  </script>
+</body>
+
+</html>

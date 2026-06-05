@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="field"
+    style="width: 400px; height: 250px; background: green; position: relative; border: 5px solid white; cursor: pointer; overflow: hidden;">
+    <div id="ball"
+      style="width: 30px; height: 30px; background: white; border-radius: 50%; position: absolute; top: 0; left: 0; transition: all 0.3s ease; border: 2px solid black;">
+    </div>
+  </div>
+
+  <script>
+    const field = document.getElementById('field');
+    const ball = document.getElementById('ball');
+
+    field.addEventListener('click', function (e) {
+      const rect = field.getBoundingClientRect();
+      let x = e.clientX - rect.left - field.clientLeft - ball.offsetWidth / 2;
+      let y = e.clientY - rect.top - field.clientTop - ball.offsetHeight / 2;
+
+      if (x < 0) x = 0;
+      if (y < 0) y = 0;
+      if (x > field.clientWidth - ball.offsetWidth) x = field.clientWidth - ball.offsetWidth;
+      if (y > field.clientHeight - ball.offsetHeight) y = field.clientHeight - ball.offsetHeight;
+
+      ball.style.left = x + 'px';
+      ball.style.top = y + 'px';
+    });
+  </script>
+</body>
+
+</html>

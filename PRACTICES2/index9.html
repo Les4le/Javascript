@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    function calculate(a, b, onSuccess, onError) {
+      if (b === 0) {
+
+        onError("Ділення на нуль заборонено");[cite, 3]
+      } else {
+
+        onSuccess(a / b);[cite, 4]
+      }
+    }
+
+    function onSuccess(result) {
+      console.log(`Результат: ${result}`);[cite, 8]
+    }
+
+    function onError(error) {
+      console.log(`Помилка: ${error}`);[cite, 9]
+    }
+
+
+    calculate(10, 2, onSuccess, onError);
+    calculate(10, 0, onSuccess, onError);
+
+    function processArray(array, callback) {
+      const result = [];
+      for (let i = 0; i < array.length; i++) {
+        const processed = callback(array[i]);
+        result.push(processed);
+      }
+
+      return result;
+    }
+
+    function logElement(element) {
+      console.log(element);[cite, 16]
+    }
+
+    function squareElement(element) {
+      return element * element;[cite, 15]
+    }
+
+    console.log("Виклик з logElement:");
+    processArray([1, 2, 3, 4, 5], logElement);
+
+    console.log("Виклик з squareElement:");
+    const squaredArr = processArray([1, 2, 3, 4, 5], squareElement);[cite, 20, 28]
+    console.log(squaredArr);
+
+    function createOrder(orderId) {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(`Замовлення створено: ${orderId}`);[cite, 32]
+        }, 1000);[cite, 32]
+      });
+    }
+
+    function processOrder(orderId) {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(`Замовлення оброблено: ${orderId}`);[cite, 35]
+        }, 2000);[cite, 35]
+      });
+    }
+
+    function deliverOrder(orderId) {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(`Замовлення доставлено: ${orderId}`);[cite, 36]
+        }, 3000);[cite, 36]
+      });
+    }
+
+    const currentOrderId = 4589;
+
+    createOrder(currentOrderId)
+      .then((message) => {
+        console.log(message);
+        return processOrder(currentOrderId);
+      })
+      .then((message) => {
+        console.log(message);
+        return deliverOrder(currentOrderId);
+      })
+      .then((message) => {
+        console.log(message);
+      })
+      .catch((error) => {
+        console.error("Сталася помилка при обробці замовлення:", error);
+      });
+
+    function checkEvenNumber(number) {
+      return new Promise((resolve, reject) => {
+
+        setTimeout(() => {
+          if (number % 2 === 0) {
+
+            resolve(`Парне число: ${number}`);[cite, 40]
+          } else {
+
+            reject(`Непарне число: ${number}`);[cite, 42]
+          }
+        }, 1000);[cite, 43]
+      });
+    }
+
+    checkEvenNumber(10)
+      .then((result) => console.log("Успіх:", result))
+      .catch((error) => console.log("Помилка:", error));
+
+    checkEvenNumber(7)
+      .then((result) => console.log("Успіх:", result))
+      .catch((error) => console.log("Помилка:", error));
+
+
+
+
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <ul id="bookList" style="list-style: none; padding: 0; width: 200px;">
+    <li style="padding: 5px; border: 1px solid #ccc; margin-bottom: 20px; cursor: pointer;">Книга 1: JavaScript для
+      новачків</li>
+    <li style="padding: 5px; border: 1px solid #ccc; margin-bottom: 20px; cursor: pointer;">Книга 2: Чистий Код</li>
+    <li style="padding: 5px; border: 1px solid #ccc; margin-bottom: 20px; cursor: pointer;">Книга 3: Паттерни
+      проектування
+    </li>
+  </ul>
+
+  <script>
+    const listItems = document.querySelectorAll('#bookList li');
+
+    listItems.forEach(item => {
+      item.addEventListener('click', function () {
+
+        listItems.forEach(li => li.style.background = 'transparent');
+
+        this.style.background = 'orange';
+      });
+    });
+  </script>
+</body>
+
+</html>

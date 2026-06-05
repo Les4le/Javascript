@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>x
+
+<body>
+    <script>
+        const promTask = new Promise((resolve, reject) => {
+            const isSuccess = true;
+            if (isSuccess) {
+                resolve("Task is completed");
+            } else {
+                reject("Task is NOT completed");
+            }
+        })
+        
+        const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+        async function theTask1() {
+            await delay(1000);
+            console.log("First task")
+            console.log(promTask);
+        }
+
+        async function theTask2() {
+            await delay(2000); 
+            console.log("Second task")
+            console.log(promTask);
+        }
+
+        async function theTask3() {
+            await delay(3000); 
+            console.log("Third task")
+            console.log(promTask);
+        }
+        
+        async function executeAll() {
+            console.log("Executing all tasks, folowing delay is 1 second...")
+       
+            theTask1();
+       
+            theTask2();
+       
+            theTask3();
+        }
+
+        async function main() {
+            await executeAll();
+            await delay(4000);
+            console.log("Completed All")
+            
+        }
+        // theTask1();
+        // theTask2();
+        // theTask3();
+        // executeAll();
+        // main();
+// 1 COMPLETED
+
+// 2
+
+async function sumArrayAsync(array) {
+    let sum = 0;
+    if (array.length === 0) {
+        console.log("Array is null dummy");
+    } else {
+    for (let i = 0; i < array.length; i++) {
+        await delay(1000)
+        sum += array[i];
+    }
+    console.log("done the sum is: ");    
+    console.log(sum)
+    }
+}
+
+// sumArrayAsync([1, 2, 3, 4, 5]);
+// sumArrayAsync([]);
+
+async function main2(yourArr) {
+    await sumArrayAsync(yourArr);
+}
+
+const myArray = [1,2,3,4,5];
+main2(myArray);
+
+</script>
+</body>
+
+</html>

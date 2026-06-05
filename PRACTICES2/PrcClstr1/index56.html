@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div style="margin: 50px;">
+    <button class="tooltip-btn" data-tooltip="Це перша підказка">Кнопка 1</button>
+    <button class="tooltip-btn" data-tooltip="А це вже інша, довша підказка">Кнопка 2</button>
+  </div>
+
+  <script>
+    const buttons = document.querySelectorAll('.tooltip-btn');
+
+    buttons.forEach(btn => {
+      let tooltipElem;
+
+      btn.addEventListener('mouseenter', function () {
+        const text = this.getAttribute('data-tooltip');
+        tooltipElem = document.createElement('div');
+        tooltipElem.innerText = text;
+
+        tooltipElem.style.position = 'absolute';
+        tooltipElem.style.background = '#333';
+        tooltipElem.style.color = '#fff';
+        tooltipElem.style.padding = '5px 10px';
+        tooltipElem.style.borderRadius = '4px';
+        tooltipElem.style.fontSize = '12px';
+        tooltipElem.style.zIndex = '1000';
+
+        document.body.appendChild(tooltipElem);
+
+        const rect = this.getBoundingClientRect();
+
+        let top = rect.top - tooltipElem.offsetHeight - 5;
+        if (top < 0) {
+          top = rect.bottom + 5;
+        }
+
+        tooltipElem.style.left = rect.left + (this.offsetWidth - tooltipElem.offsetWidth) / 2 + window.scrollX + 'px';
+        tooltipElem.style.top = top + window.scrollY + 'px';
+      });
+
+      btn.addEventListener('mouseleave', function () {
+        if (tooltipElem) {
+          tooltipElem.remove();
+          tooltipElem = null;
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    const jsonString = '{"name": "Іван", "age": 25, "city": "Київ"}';
+
+    try {
+      const userObj = JSON.parse(jsonString);
+      console.log("JSON успішно розпарсено у об'єкт:", userObj);
+      console.log(`Ім'я: ${userObj.name}, Вік: ${userObj.age}`);
+    } catch (error) {
+      console.error("Помилка валідації JSON рядка:", error.message);
+    }
+
+    const company = {
+      title: "Tech Solutions",
+      employeesCount: 42,
+      skills: ["JavaScript", "Node.js", "React"],
+      isHiring: true
+    };
+
+    const serializedJSON = JSON.stringify(company, null, 2);
+    console.log("Об'єкт конвертовано у JSON рядок:");
+    console.log(serializedJSON);
+  </script>
+</body>
+
+</html>

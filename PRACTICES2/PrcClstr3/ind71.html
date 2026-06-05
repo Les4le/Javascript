@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <form id="regForm" style="display: flex; flex-direction: column; width: 300px; gap: 10px;">
+    <input type="text" id="regLogin" placeholder="Логін (3-10 символів, англ.)">
+    <input type="password" id="regPass" placeholder="Пароль (мін. 6 симв, цифра+буква)">
+    <input type="password" id="regConfirm" placeholder="Підтвердження паролю">
+    <input type="text" id="regEmail" placeholder="Email">
+    <button type="submit">Зареєструватися</button>
+  </form>
+  <p id="regError" style="color: red;"></p>
+  <div id="cookieBlock"></div>
+  <script>
+    document.getElementById('regForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const errorEl = document.getElementById('regError');
+      errorEl.innerText = '';
+
+      const login = document.getElementById('regLogin').value;
+      const pass = document.getElementById('regPass').value;
+      const confirm = document.getElementById('regConfirm').value;
+      const email = document.getElementById('regEmail').value;
+
+      const loginRegex = /^[a-zA-Z]{3,10}$/;
+      const passRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!loginRegex.test(login)) {
+        errorEl.innerText = "Логін має містити від 3 до 10 латинських літер!";
+        return;
+      }
+      if (!passRegex.test(pass)) {
+        errorEl.innerText = "Пароль має бути від 6 символів та містити хоча б одну цифру і літеру!";
+        return;
+      }
+      if (pass !== confirm) {
+        errorEl.innerText = "Паролі не збігаються!";
+        return;
+      }
+      if (!emailRegex.test(email)) {
+        errorEl.innerText = "Некоректний формат Email!";
+        return;
+      }
+
+      alert("Реєстрація успішна!");
+      this.reset();
+    });
+
+    function setCookie(name, value, days) {
+      let expires = "";
+      if (days) {
+        let date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toUTCString();
+      }
+      document.cookie = name + "=" + (value || "") + expires + "; path=/";
+    }
+
+    function getCookie(name) {
+      let nameEQ = name + "=";
+      let ca = document.cookie.split(';');
+      for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+      }
+      return null;
+    }
+
+    const cookieBlock = document.getElementById('cookieBlock');
+    const savedName = getCookie('username');
+
+    if (savedName) {
+      cookieBlock.innerHTML = `<h1>Привіт, ${savedName}!</h1><button id="logoutBtn">Вийти</button>`;
+      document.getElementById('logoutBtn').addEventListener('click', () => {
+        setCookie('username', '', -1); // Удаляем куки
+        location.reload();
+      });
+    } else {
+      cookieBlock.innerHTML = `
+        <input type="text" id="cookieNameInput" placeholder="Введіть ваше ім'я">
+        <button id="saveNameBtn">Зберегти</button>
+    `;
+      document.getElementById('saveNameBtn').addEventListener('click', () => {
+        const nameInput = document.getElementById('cookieNameInput').value;
+        if (nameInput.trim()) {
+          setCookie('username', nameInput, 1); // сохраняем на 1 день
+          location.reload();
+        }
+      });
+    }
+
+  </script>
+</body>
+
+</html>

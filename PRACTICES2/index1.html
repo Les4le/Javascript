@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+
+    const number = Number(prompt("Введіть число:"));
+    if (number > 0) {
+      console.log("Число додатне");
+    } else if (number < 0) {
+      console.log("Число від'ємне");
+    } else {
+      console.log("Число є нулем");
+    }
+
+    const age = Number(prompt("Введіть ваш вік:"));
+    if (age >= 0 && age <= 120 && !isNaN(age)) {
+      console.log("Вік введено коректно");
+    } else {
+      console.log("Некоректний вік!");
+    }
+
+
+    const numForAbsolute = Number(prompt("Введіть число для знаходження модуля:"));
+    const absoluteValue = numForAbsolute < 0 ? -numForAbsolute : numForAbsolute;
+    console.log(`Модуль числа: ${absoluteValue}`);
+
+    const hours = Number(prompt("Введіть години (0-23):"));
+    const minutes = Number(prompt("Введіть хвилини (0-59):"));
+    const seconds = Number(prompt("Введіть секунди (0-59):"));
+
+    if (hours >= 0 && hours < 24 && minutes >= 0 && minutes < 60 && seconds >= 0 && seconds < 60) {
+      console.log(`Час коректний: ${hours}:${minutes}:${seconds}`);
+    } else {
+      console.log("Некоректно введений час!");
+    }
+
+
+    const x = Number(prompt("Введіть координату X:"));
+    const y = Number(prompt("Введіть координату Y:"));
+
+    if (x === 0 && y === 0) {
+      console.log("Точка знаходиться на початку координат");
+    } else if (x === 0) {
+      console.log("Точка лежить на осі Y");
+    } else if (y === 0) {
+      console.log("Точка лежить на осі X");
+    } else if (x > 0 && y > 0) {
+      console.log("I чверть");
+    } else if (x < 0 && y > 0) {
+      console.log("II чверть");
+    } else if (x < 0 && y < 0) {
+      console.log("III чверть");
+    } else {
+      console.log("IV чверть");
+    }
+
+    const monthNumber = Number(prompt("Введіть номер місяця (1-12):"));
+    switch (monthNumber) {
+      case 1: console.log("Січень"); break;
+      case 2: console.log("Лютий"); break;
+      case 3: console.log("Березень"); break;
+      case 4: console.log("Квітень"); break;
+      case 5: console.log("Травень"); break;
+      case 6: console.log("Червень"); break;
+      case 7: console.log("Липень"); break;
+      case 8: console.log("Серпень"); break;
+      case 9: console.log("Вересень"); break;
+      case 10: console.log("Жовтень"); break;
+      case 11: console.log("Листопад"); break;
+      case 12: console.log("Грудень"); break;
+      default: console.log("Некоректний номер місяця!");
+    }
+
+    const num1 = Number(prompt("Введіть перше число:"));
+    const num2 = Number(prompt("Введіть друге число:"));
+    const sign = prompt("Введіть знак (+, -, *, /):");
+
+    switch (sign) {
+      case "+": console.log(`Результат: ${num1 + num2}`); break;
+      case "-": console.log(`Результат: ${num1 - num2}`); break;
+      case "*": console.log(`Результат: ${num1 * num2}`); break;
+      case "/":
+        if (num2 === 0) {
+          console.log("Помилка: ділення на нуль!");
+        } else {
+          console.log(`Результат: ${num1 / num2}`);
+        }
+        break;
+      default: console.log("Невідома операція!");
+    }
+
+    const tNum1 = Number(prompt("Введіть перше число:"));
+    const tNum2 = Number(prompt("Введіть друге число:"));
+    console.log(`Більше число: ${tNum1 > tNum2 ? tNum1 : tNum2}`);
+
+    const multOfFive = Number(prompt("Введіть число для перевірки на кратність 5:"));
+    console.log(multOfFive % 5 === 0 ? "Число кратне 5" : "Число не кратне 5");
+
+    const planet = prompt("Введіть назву планети:");
+    console.log(planet.toLowerCase() === "земля" ? "Привіт, землянине!" : "Привіт, інопланетянине!");
+
+
+  </script>
+</body>
+
+</html>

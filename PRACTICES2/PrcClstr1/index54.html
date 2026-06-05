@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div
+    style="display: flex; flex-direction: column; gap: 10px; width: 60px; background: #333; padding: 10px; border-radius: 10px;">
+    <div class="light" style="width: 50px; height: 50px; background: gray; border-radius: 50%;"></div>
+    <div class="light" style="width: 50px; height: 50px; background: gray; border-radius: 50%;"></div>
+    <div class="light" style="width: 50px; height: 50px; background: gray; border-radius: 50%;"></div>
+  </div>
+  <button id="nextLightBtn" style="margin-top: 10px;">Наступне світло</button>
+
+  <script>
+    const lights = document.querySelectorAll('.light');
+    const colors = ['red', 'yellow', 'green'];
+    let currentLightIndex = -1;
+
+    document.getElementById('nextLightBtn').addEventListener('click', () => {
+
+      if (currentLightIndex >= 0) {
+        lights[currentLightIndex].style.background = 'gray';
+      }
+
+      currentLightIndex = (currentLightIndex + 1) % colors.length;
+
+      lights[currentLightIndex].style.background = colors[currentLightIndex];
+    });
+  </script>
+</body>
+
+</html>
