@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #edf2f7;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .search-box {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 25px;
+    }
+
+    input {
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #cbd5e0;
+      border-radius: 6px;
+      width: 240px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #4a5568;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #2d3748;
+    }
+
+    .card {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      text-align: center;
+      width: 300px;
+      display: none;
+    }
+
+    .card img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      margin-bottom: 15px;
+      border: 2px solid #e2e8f0;
+    }
+
+    .card h3 {
+      margin: 0 0 5px 0;
+      color: #1a202c;
+    }
+
+    .card p {
+      color: #718096;
+      font-size: 14px;
+      margin-bottom: 15px;
+    }
+
+    .card a {
+      display: inline-block;
+      padding: 8px 16px;
+      background-color: #3182ce;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .card a:hover {
+      background-color: #2b6cb0;
+    }
+  </style>
+  <title>Document</title>
+</head>
+
+<body>
+
+  <div class="search-box">
+    <input type="text" id="ghInput" placeholder="Введіть нікнейм GitHub...">
+    <button id="findBtn">Знайти</button>
+  </div>
+
+  <div class="card" id="devCard">
+    <img id="avatar" src="" alt="Avatar">
+    <h3 id="name">Ім'я розробника</h3>
+    <p>Публічні репозиторії: <strong id="repos">0</strong></p>
+    <a id="link" href="#" target="_blank">Відкрити сторінку</a>
+  </div>
+
+  <script>
+    document.getElementById('findBtn').addEventListener('click', () => {
+      const username = document.getElementById('ghInput').value.trim();
+      const card = document.getElementById('devCard');
+      if (!username) return;
+
+      fetch(`https://api.github.com/users/${username}`)
+        .then(response => {
+          if (!response.ok) {
+            alert('Користувача не знайдено або сталася помилка!');
+            throw new Error('User not found');
+          }
+          return response.json();
+        })
+        .then(data => {
+          document.getElementById('avatar').src = data.avatar_url;
+          document.getElementById('name').textContent = data.name || data.login;
+          document.getElementById('repos').textContent = data.public_repos;
+          document.getElementById('link').href = data.html_url;
+          card.style.display = 'block';
+        })
+        .catch(err => {
+          card.style.display = 'none';
+          console.error(err);
+        });
+    });
+  </script>
+
+</body>
+
+</html>

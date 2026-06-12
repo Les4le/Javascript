@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      gap: 30px;
+      padding: 20px;
+      background-color: #f4f4f9;
+    }
+
+    .users-list {
+      width: 30%;
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .users-list li {
+      padding: 10px;
+      cursor: pointer;
+      border-bottom: 1px solid #eee;
+      list-style: none;
+    }
+
+    .users-list li:hover {
+      background-color: #e9ecef;
+      font-weight: bold;
+    }
+
+    .details-container {
+      width: 65%;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .info-card,
+    .posts-card {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      display: none;
+    }
+
+    .info-row {
+      margin-bottom: 10px;
+    }
+
+    .info-row strong {
+      inline-size: 120px;
+      display: inline-block;
+    }
+
+    button {
+      padding: 8px 15px;
+      cursor: pointer;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .post-item {
+      border-bottom: 1px solid #ddd;
+      padding: 10px 0;
+    }
+
+    .post-item h4 {
+      margin: 0 0 5px 0;
+      color: #333;
+    }
+  </style>
+  <title>Document</title>
+</head>
+
+<body>
+  <div class="users-list">
+    <h3>All users:</h3>
+    <ul id="usersUl"></ul>
+  </div>
+
+  <div class="details-container">
+    <div class="info-card" id="infoCard">
+      <h3>User info:</h3>
+      <div class="info-row"><strong>Name:</strong> <span id="uName"></span></div>
+      <div class="info-row"><strong>Username:</strong> <span id="uUsername"></span></div>
+      <div class="info-row"><strong>Address:</strong> <span id="uAddress"></span></div>
+      <div class="info-row"><strong>Email:</strong> <span id="uEmail"></span></div>
+      <div class="info-row"><strong>Phone:</strong> <span id="uPhone"></span></div>
+      <div class="info-row"><strong>Website:</strong> <span id="uWebsite"></span></div>
+      <button id="showPostsBtn">Show posts</button>
+    </div>
+
+    <div class="posts-card" id="postsCard">
+      <h3>User's posts:</h3>
+      <div id="postsList"></div>
+    </div>
+  </div>
+
+  <script>
+    const usersUl = document.getElementById('usersUl');
+    const infoCard = document.getElementById('infoCard');
+    const postsCard = document.getElementById('postsCard');
+    let selectedUserId = null;
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', 'https://jsonplaceholder.typicode.com/users', true);
+    xhr.onload = function () {
+      if (xhr.status === 200) {
+        const users = JSON.parse(xhr.responseText);
+        users.forEach(user => {
+          const li = document.createElement('li');
+          li.textContent = user.name;
+          li.addEventListener('click', () => loadUserInfo(user.id));
+          usersUl.appendChild(li);
+        });
+      }
+    };
+    xhr.send();
+
+    function loadUserInfo(id) {
+      selectedUserId = id;
+      postsCard.style.display = 'none';
+
+      const xhrUser = new XMLHttpRequest();
+      xhrUser.open('GET', `https://jsonplaceholder.typicode.com/users/${id}`, true);
+      xhrUser.onload = function () {
+        if (xhrUser.status === 200) {
+          const user = JSON.parse(xhrUser.responseText);
+          document.getElementById('uName').textContent = user.name;
+          document.getElementById('uUsername').textContent = user.username;
+          document.getElementById('uAddress').textContent = `${user.address.city}, ${user.address.street}`;
+          document.getElementById('uEmail').textContent = user.email;
+          document.getElementById('uPhone').textContent = user.phone;
+          document.getElementById('uWebsite').textContent = user.website;
+          infoCard.style.display = 'block';
+        }
+      };
+      xhrUser.send();
+    }
+
+    document.getElementById('showPostsBtn').addEventListener('click', () => {
+      if (!selectedUserId) return;
+
+      const xhrPosts = new XMLHttpRequest();
+      xhrPosts.open('GET', `https://jsonplaceholder.typicode.com/posts?userId=${selectedUserId}`, true);
+      xhrPosts.onload = function () {
+        if (xhrPosts.status === 200) {
+          const posts = JSON.parse(xhrPosts.responseText);
+          const postsList = document.getElementById('postsList');
+          postsList.innerHTML = '';
+
+          posts.forEach(post => {
+            const postDiv = document.createElement('div');
+            postDiv.className = 'post-item';
+            postDiv.innerHTML = `<h4>${post.title}</h4><p>${post.body}</p>`;
+            postsList.appendChild(postDiv);
+          });
+          postsCard.style.display = 'block';
+        }
+      };
+      xhrPosts.send();
+    });
+  </script>
+</body>
+
+</html>

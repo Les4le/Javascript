@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px;
+      background-color: #f8f9fa;
+    }
+
+    .search-form {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+      display: flex;
+      gap: 15px;
+      align-items: flex-end;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    input,
+    select,
+    button {
+      padding: 8px;
+      font-size: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+      border: none;
+      padding: 8px 20px;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .films-container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+
+    .film-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .pagination {
+      display: flex;
+      gap: 5px;
+      justify-content: center;
+      margin-top: 15px;
+    }
+
+    .pagination span {
+      padding: 5px 10px;
+      cursor: pointer;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+    }
+
+    .pagination span.active {
+      background-color: #007bff;
+      color: white;
+      border-color: #007bff;
+    }
+
+    .details-container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      display: none;
+    }
+
+    .details-content {
+      display: flex;
+      gap: 20px;
+      margin-top: 15px;
+    }
+
+    .details-content img {
+      max-width: 150px;
+      border-radius: 4px;
+    }
+  </style>
+  <title>Document</title>
+</head>
+
+<body>
+  <div class="search-form">
+    <div class="form-group">
+      <label>Title:</label>
+      <input type="text" id="titleInput" value="hello">
+    </div>
+    <div class="form-group">
+      <label>Type:</label>
+      <select id="typeSelect">
+        <option value="movie">Movie</option>
+        <option value="series">Series</option>
+        <option value="episode">Episode</option>
+      </select>
+    </div>
+    <button id="searchBtn">Search</button>
+  </div>
+
+  <div class="films-container" id="filmsContainer" style="display: none;">
+    <h3>Films:</h3>
+    <div id="filmsList"></div>
+    <div class="pagination" id="pagination"></div>
+  </div>
+
+  <div class="details-container" id="detailsContainer">
+    <h3>Film info:</h3>
+    <div class="details-content" id="detailsContent"></div>
+  </div>
+
+  <script>
+    const API_KEY = 'b5e0cd9e';
+    let currentTitle = '';
+    let currentType = '';
+    let currentPage = 1;
+
+    document.getElementById('searchBtn').addEventListener('click', () => {
+      currentTitle = document.getElementById('titleInput').value.trim();
+      currentType = document.getElementById('typeSelect').value;
+      currentPage = 1;
+      if (currentTitle) fetchMovies();
+    });
+
+    function fetchMovies() {
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', `https://www.omdbapi.com/?apikey=${API_KEY}&s=${encodeURIComponent(currentTitle)}&type=${currentType}&page=${currentPage}`, true);
+      xhr.onload = function () {
+        const data = JSON.parse(xhr.responseText);
+        const container = document.getElementById('filmsContainer');
+        const list = document.getElementById('filmsList');
+        list.innerHTML = '';
+
+        if (data.Response === "True") {
+          container.style.display = 'block';
+          data.Search.forEach(film => {
+            const div = document.createElement('div');
+            div.className = 'film-item';
+            div.innerHTML = `
+                            <div><strong>${film.Title}</strong> (${film.Year}) [${film.Type}]</div>
+                            <button onclick="fetchDetails('${film.imdbID}')">Details</button>
+                        `;
+            list.appendChild(div);
+          });
+          renderPagination(parseInt(data.totalResults));
+        } else {
+          container.style.display = 'block';
+          list.innerHTML = '<p style="color:red;">Movie not found!</p>';
+          document.getElementById('pagination').innerHTML = '';
+        }
+      };
+      xhr.send();
+    }
+
+    function renderPagination(total) {
+      const pagDiv = document.getElementById('pagination');
+      pagDiv.innerHTML = '';
+      const totalPages = Math.ceil(total / 10);
+
+      const start = Math.max(1, currentPage - 2);
+      const end = Math.min(totalPages, start + 5);
+
+      for (let i = start; i <= end; i++) {
+        const span = document.createElement('span');
+        span.textContent = i;
+        if (i === currentPage) span.className = 'active';
+        span.addEventListener('click', () => {
+          currentPage = i;
+          fetchMovies();
+        });
+        pagDiv.appendChild(span);
+      }
+    }
+
+    function fetchDetails(imdbID) {
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', `https://www.omdbapi.com/?apikey=${API_KEY}&i=${imdbID}`, true);
+      xhr.onload = function () {
+        const film = JSON.parse(xhr.responseText);
+        const detailsContainer = document.getElementById('detailsContainer');
+        const content = document.getElementById('detailsContent');
+
+        content.innerHTML = `
+                    <img src="${film.Poster !== 'N/A' ? film.Poster : 'https://via.placeholder.com/150'}" alt="Poster">
+                    <div>
+                        <p><strong>Title:</strong> ${film.Title}</p>
+                        <p><strong>Released:</strong> ${film.Released}</p>
+                        <p><strong>Genre:</strong> ${film.Genre}</p>
+                        <p><strong>Country:</strong> ${film.Country}</p>
+                        <p><strong>Director:</strong> ${film.Director}</p>
+                        <p><strong>Actors:</strong> ${film.Actors}</p>
+                        <p><strong>Plot:</strong> ${film.Plot}</p>
+                    </div>
+                `;
+        detailsContainer.style.display = 'block';
+        window.scrollTo({ top: detailsContainer.offsetTop, behavior: 'smooth' });
+      };
+      xhr.send();
+    }
+  </script>
+</body>
+
+</html>
