@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fff9f2;
+      padding: 40px;
+    }
+
+    .autocomplete-container {
+      position: relative;
+      width: 300px;
+    }
+
+    #countryInput {
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
+      border: 1px solid #888;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+
+    .suggestions-list {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: #f4f4f4;
+      border: 1px solid #888;
+      border-top: none;
+      border-radius: 0 0 4px 4px;
+      max-height: 300px;
+      overflow-y: auto;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+    }
+
+    .suggestions-list li {
+      padding: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .suggestions-list li:last-child {
+      border-bottom: none;
+    }
+
+    .suggestions-list li:hover {
+      background-color: #e2e2e2;
+      font-weight: bold;
+    }
+  </style>
+  <title>Document</title>
+</head>
+
+<body>
+  <div class="autocomplete-container">
+    <input type="text" id="countryInput" placeholder="Введіть країну..." autocomplete="off">
+    <ul id="suggestions" class="suggestions-list"></ul>
+  </div>
+
+  <script>
+
+    const countries = [
+      "Cambodia", "Cameroon", "Canada", "Cape Verde", "Central African Republic",
+      "Chad", "Chile", "China", "Colombia", "Comoros", "Congo", "Costa Rica",
+      "Croatia", "Cuba", "Cyprus", "Czech Republic", "Ukraine", "United Kingdom", "USA"
+    ];
+
+    const input = document.getElementById('countryInput');
+    const suggestionsList = document.getElementById('suggestions');
+
+    input.addEventListener('input', function () {
+      const query = this.value.toLowerCase();
+      suggestionsList.innerHTML = '';
+
+      if (!query) return;
+
+      const filtered = countries.filter(country =>
+        country.toLowerCase().includes(query)
+      ).slice(0, 10);
+      filtered.forEach(country => {
+        const li = document.createElement('li');
+        li.textContent = country;
+
+        li.addEventListener('click', () => {
+          input.value = country;
+          suggestionsList.innerHTML = '';
+        });
+
+        suggestionsList.appendChild(li);
+      });
+    });
+
+    document.addEventListener('click', (e) => {
+      if (e.target !== input) {
+        suggestionsList.innerHTML = '';
+      }
+    });
+  </script>
+</body>
+
+</html>

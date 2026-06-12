@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background-color: antiquewhite;
+        }
+
+        #colorPalette {
+            width: 100%;
+            height: 750px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-content: flex-start;
+            flex-wrap: wrap;
+        }
+
+        button {
+            width: 100%;
+            height: 50px;
+        }
+        
+        #buttonHolder {
+            display: flex;
+        }
+
+        #divPalette {
+            width: 15%;
+            height: 15%;
+        }
+    </style>
+    <title>Document</title>
+</head>
+<body>
+    <header id="main">
+
+    </header>
+    <div id="buttonHolder"></div>
+<script>
+    function addElements() {
+            const main = document.getElementById("main");
+            const buttonHolder = document.getElementById("buttonHolder");
+            const newDiv = document.createElement('div');
+            newDiv.id = 'colorPalette';
+            const newButton = document.createElement('button');
+            newButton.id = 'newPalette';
+            newButton.textContent = 'New Color';
+            buttonHolder.append(newButton);
+            newButton.onclick = function addRandPalette() {
+                const randomColor = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`;
+                const newPalette = document.createElement('button');
+                newPalette.id = 'divPalette';
+                newPalette.style.backgroundColor = randomColor;
+                newDiv.append(newPalette);
+                newPalette.addEventListener('click', (event) => {
+                    event.target.remove();
+                })
+            }
+            
+            main.append(newDiv);
+        }
+
+        addElements();
+</script>
+
+</body>
+</html>

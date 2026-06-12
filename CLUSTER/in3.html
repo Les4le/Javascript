@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background-color: antiquewhite;
+        }
+
+        .palette {
+            display: grid;
+            grid-template-columns: repeat(9, 30px);
+            grid-gap: 2px;
+            border: 1px solid #888;
+            padding: 2px;
+            width: max-content;
+            margin-bottom: 20px;
+            background-color: #fff;
+        }
+
+        .cell {
+            width: 30px;
+            height: 20px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+        }
+
+        .text-container {
+            font-size: 18px;
+            line-height: 1.5;
+            max-width: 800px;
+            transition: color 0.3s;
+        }
+    </style>
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="palette" id="palette">
+        <div class="cell" data-color="black" style="background-color: black;"></div>
+        <div class="cell" data-color="gray" style="background-color: gray;"></div>
+        <div class="cell" data-color="darkred" style="background-color: darkred;"></div>
+        <div class="cell" data-color="red" style="background-color: red;"></div>
+        <div class="cell" data-color="yellow" style="background-color: yellow;"></div>
+        <div class="cell" data-color="limegreen" style="background-color: limegreen;"></div>
+        <div class="cell" data-color="deepskyblue" style="background-color: deepskyblue;"></div>
+        <div class="cell" data-color="royalblue" style="background-color: royalblue;"></div>
+        <div class="cell" data-color="purple" style="background-color: purple;"></div>
+        <div class="cell" data-color="white" style="background-color: white;"></div>
+        <div class="cell" data-color="lightgray" style="background-color: lightgray;"></div>
+        <div class="cell" data-color="peru" style="background-color: peru;"></div>
+        <div class="cell" data-color="pink" style="background-color: pink;"></div>
+        <div class="cell" data-color="wheat" style="background-color: wheat;"></div>
+        <div class="cell" data-color="yellowgreen" style="background-color: yellowgreen;"></div>
+        <div class="cell" data-color="lightblue" style="background-color: lightblue;"></div>
+        <div class="cell" data-color="lightsteelblue" style="background-color: lightsteelblue;"></div>
+        <div class="cell" data-color="lavender" style="background-color: lavender;"></div>
+    </div>
+    <p class="text-container" id="targetText">
+        What is Lorem Ipsum? Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has
+        been
+        the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
+        scrambled
+        it to make a type specimen book.
+    </p>
+
+    <script>
+        const palette = document.getElementById('palette');
+        const targetText = document.getElementById('targetText');
+
+        palette.addEventListener('click', (event) => {
+
+            if (event.target.classList.contains('cell')) {
+                const selectedColor = event.target.dataset.color;
+                targetText.style.color = selectedColor;
+            }
+        });
+    </script>
+</body>
+
+</html>

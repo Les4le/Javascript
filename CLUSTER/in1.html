@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: bisque;
+        }
+
+        #coolText {
+            border: 2px solid black;
+            border-radius: 5px;
+            display: flex;
+            margin: 5px;
+            width: 100px;
+            height: 100px;
+            padding: 25px;
+            flex-wrap: wrap;
+            flex-direction: column-reverse;
+        }
+        
+        h1 {
+            width: 50%;
+
+        }
+
+        button {
+            width: 50%;
+            height: 50%;
+            gap: 5px;
+            background-color: antiquewhite;
+        }
+
+    </style>
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="container">
+
+    </div>
+    <script>
+        function addElements() {
+            const newDiv = document.createElement('div');
+            newDiv.id = 'coolText';
+            const newh1 = document.createElement('h1');
+            newh1.id = 'numberUpDown'
+            newh1.textContent = 1;
+            newDiv.prepend(newh1);
+            const btnUp = document.createElement('button');
+            const btnDown = document.createElement('button');
+            newh1.after(btnUp);
+            newh1.after(btnDown);
+            btnUp.id = 'Up';
+            btnDown.id = 'Down';
+            btnUp.textContent = '↑';
+            btnUp.onclick = function numUp() {    
+            newh1.textContent = Number(newh1.textContent) + 1;
+        }
+
+        btnDown.onclick = function numDown() {    
+            newh1.textContent = Number(newh1.textContent) - 1;
+        }
+        
+            btnDown.textContent = '↓';
+            const body = document.getElementById("container");
+            body.prepend(newDiv);
+
+            // Style
+
+
+        }
+
+        addElements();
+    </script>
+
+</body>
+
+</html>
