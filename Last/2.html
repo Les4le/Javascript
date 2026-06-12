@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .search-box {
+      margin-bottom: 20px;
+    }
+
+    input {
+      padding: 10px;
+      font-size: 16px;
+      width: 250px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+
+    .profile-card {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 350px;
+      text-align: center;
+      display: none;
+    }
+
+    .profile-card img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #ddd;
+    }
+
+    .profile-card h2 {
+      margin: 15px 0 5px 0;
+      font-size: 22px;
+    }
+
+    .profile-card .login {
+      color: #666;
+      font-style: italic;
+      margin-bottom: 15px;
+    }
+
+    .stats {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 15px;
+      background: #f8f9fa;
+      padding: 10px;
+      border-radius: 6px;
+    }
+
+    .error {
+      color: red;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+  </style>
+  <title>Document</title>
+</head>
+
+<body>
+  <div class="search-box">
+    <input type="text" id="usernameInput" placeholder="Введіть логін GitHub...">
+    <button id="searchBtn">Пошук</button>
+  </div>
+
+  <div id="errorMsg" class="error"></div>
+
+  <div class="profile-card" id="profileCard">
+    <img id="avatar" src="" alt="Avatar">
+    <h2 id="name">Name</h2>
+    <div id="login" class="login">@login</div>
+    <a id="profileLink" href="#" target="_blank">Відкрити профіль GitHub</a>
+    <div class="stats">
+      <div><strong>Фоловери:</strong> <span id="followers">0</span></div>
+      <div><strong>Репозиторії:</strong> <span id="repos">0</span></div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('searchBtn').addEventListener('click', function () {
+      const username = document.getElementById('usernameInput').value.trim();
+      const card = document.getElementById('profileCard');
+      const errorMsg = document.getElementById('errorMsg');
+
+      if (!username) return;
+
+      card.style.display = 'none';
+      errorMsg.textContent = '';
+
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', `https://api.github.com/users/${username}`, true);
+
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+          if (xhr.status === 200) {
+            const data = JSON.parse(xhr.responseText);
+
+            document.getElementById('avatar').src = data.avatar_url;
+            document.getElementById('name').textContent = data.name || 'Не вказано';
+            document.getElementById('login').textContent = `@${data.login}`;
+            document.getElementById('profileLink').href = data.html_url;
+            document.getElementById('followers').textContent = data.followers;
+            document.getElementById('repos').textContent = data.public_repos;
+
+            card.style.display = 'block';
+          } else if (xhr.status === 404) {
+            errorMsg.textContent = 'Користувача не знайдено!';
+          } else {
+            errorMsg.textContent = 'Сталася помилка при запиті.';
+          }
+        }
+      };
+      xhr.send();
+    });
+  </script>
+</body>
+
+</html>

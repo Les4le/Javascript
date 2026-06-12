@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #1a1a1a;
+      color: #fff;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .search-container {
+      max-width: 800px;
+      margin: 20px auto;
+      background: #2a2a2a;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .form-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    input[type="text"],
+    select {
+      padding: 10px;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+
+    input[type="text"] {
+      flex: 2;
+      background: #444;
+      color: #fff;
+    }
+
+    select {
+      flex: 1;
+      background: #444;
+      color: #fff;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #e50914;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background-color: #b81d24;
+    }
+
+    .movies-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 20px;
+      max-width: 1000px;
+      margin: 30px auto;
+    }
+
+    .movie-card {
+      background: #222;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .movie-card img {
+      width: 100%;
+      height: 260px;
+      object-fit: cover;
+      background: #333;
+    }
+
+    .movie-info {
+      padding: 10px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .movie-title {
+      font-size: 14px;
+      font-weight: bold;
+      margin: 5px 0;
+      min-height: 40px;
+    }
+
+    .movie-meta {
+      font-size: 12px;
+      color: #aaa;
+      text-transform: uppercase;
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      margin: 20px 0;
+      display: none;
+    }
+
+    .pagination button {
+      background-color: #444;
+    }
+
+    .pagination button:disabled {
+      background-color: #222;
+      cursor: not-allowed;
+      color: #666;
+    }
+
+    .status-msg {
+      text-align: center;
+      font-size: 18px;
+      margin-top: 20px;
+      color: #aaa;
+    }
+  </style>
+  <title>Document</title>
+</head>
+
+<body>
+  <div class="search-container">
+    <h2>Пошук фільмів</h2>
+    <div class="form-row">
+      <input type="text" id="titleInput" placeholder="Введіть назву фільму (наприклад, Batman, Matrix)...">
+      <select id="typeSelect">
+        <option value="">Усі типи</option>
+        <option value="movie">Фільм (Movie)</option>
+        <option value="series">Серіал (Series)</option>
+        <option value="episode">Епізод (Episode)</option>
+      </select>
+      <button id="searchBtn">Шукати</button>
+    </div>
+  </div>
+
+  <div id="status" class="status-msg">Введіть назву фільму для початку пошуку...</div>
+
+  <div class="movies-grid" id="moviesGrid"></div>
+
+  <div class="pagination" id="paginationCtrl">
+    <button id="prevBtn">◀ Назад</button>
+    <span id="pageDisplay">Сторінка 1</span>
+    <button id="nextBtn">Вперед ▶</button>
+  </div>
+
+  <script>
+    const API_KEY = '2a98e82a';
+    let currentQuery = '';
+    let currentType = '';
+    let currentPage = 1;
+    let totalResults = 0;
+
+    const grid = document.getElementById('moviesGrid');
+    const status = document.getElementById('status');
+    const pagination = document.getElementById('paginationCtrl');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const pageDisplay = document.getElementById('pageDisplay');
+
+    document.getElementById('searchBtn').addEventListener('click', () => {
+      currentQuery = document.getElementById('titleInput').value.trim();
+      currentType = document.getElementById('typeSelect').value;
+      if (!currentQuery) {
+        status.textContent = 'Будь ласка, введіть назву фільму!';
+        return;
+      }
+      currentPage = 1;
+      fetchMovies();
+    });
+
+    async function fetchMovies() {
+      grid.innerHTML = '';
+      pagination.style.display = 'none';
+      status.style.display = 'block';
+      status.textContent = 'Пошук...';
+
+      const url = `https://www.omdbapi.com/?apikey=${API_KEY}&s=${encodeURIComponent(currentQuery)}&type=${currentType}&page=${currentPage}`;
+
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (data.Response === "True") {
+          status.style.display = 'none';
+          totalResults = parseInt(data.SearchVersion || data.totalResults);
+
+          data.Search.forEach(movie => {
+            const card = document.createElement('div');
+            card.className = 'movie-card';
+
+            // Перевірка наявності постера
+            const posterUrl = movie.Poster !== "N/A" ? movie.Poster : 'https://via.placeholder.com/180x260?text=No+Poster';
+
+            card.innerHTML = `
+                              <img src="${posterUrl}" alt="${movie.Title}">
+                              <div class="movie-info">
+                                  <div class="movie-title">${movie.Title}</div>
+                                  <div class="movie-meta">${movie.Type} • ${movie.Year}</div>
+                              </div>
+                          `;
+            grid.appendChild(card);
+          });
+
+          setupPagination();
+        } else {
+          status.textContent = `Фільмів не знайдено: ${data.Error}`;
+        }
+      } catch (err) {
+        status.textContent = 'Помилка мережі або запиту.';
+        console.error(err);
+      }
+    }
+
+    function setupPagination() {
+      const maxPages = Math.ceil(totalResults / 10);
+      pageDisplay.textContent = `Сторінка ${currentPage} з ${maxPages}`;
+
+      prevBtn.disabled = currentPage === 1;
+      nextBtn.disabled = currentPage >= maxPages;
+
+      pagination.style.display = 'flex';
+    }
+
+    prevBtn.addEventListener('click', () => {
+      if (currentPage > 1) {
+        currentPage--;
+        fetchMovies();
+      }
+    });
+
+    nextBtn.addEventListener('click', () => {
+      currentPage++;
+      fetchMovies();
+    });
+  </script>
+</body>
+
+</html>
